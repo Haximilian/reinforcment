@@ -1,4 +1,4 @@
 make:
-	emcc main.cpp -o target/main.html -s USE_SDL=2 -D __EMSCRIPTEN__
+	emcc main.cpp environment.cpp -o target/main.html -I ./include -s USE_SDL=2 -D __EMSCRIPTEN__
 native:
-	clang++ main.cpp -std=c++17 -I/Library/Frameworks/SDL2.framework/Headers -F /Library/Frameworks/ -framework SDL2 -o target/application
+	clang++ main.cpp environment.cpp -std=c++17 -I ./include -F /Library/Frameworks/ -framework SDL2 -o target/application
