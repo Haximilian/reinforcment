@@ -3,6 +3,7 @@
         {
             "name": "project",
             "includePath": [
+                "${workspaceFolder}/",
                 "${workspaceFolder}/include/"
             ],
             "defines": [],
