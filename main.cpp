@@ -49,7 +49,7 @@ void mainloop(void *mainloop_arguments)
     }
 
     SDL_Event event;
-    while (SDL_PollEvent(&event))
+    if (SDL_PollEvent(&event))
     {
         if (event.type == SDL_QUIT)
         {
@@ -60,11 +60,11 @@ void mainloop(void *mainloop_arguments)
             // std::cout << event.key.keysym.sym << std::endl;
             // update_state(arguments->object, event.key.keysym.sym);
         }
-        update_state(arguments->configuration, arguments->state);
-        Eigen::Vector2f position = translate(WINDOW_WIDTH, WINDOW_HEIGHT, 8, arguments->state->position);
-        arguments->object->x = position(0);
-        arguments->object->y = position(1);
     }
+    update_state(arguments->configuration, arguments->state);
+    Eigen::Vector2f position = translate(WINDOW_WIDTH, WINDOW_HEIGHT, 4, arguments->state->position);
+    arguments->object->x = position(0);
+    arguments->object->y = position(1);
 
     // you can either clear the screen and re-draw other objects
     // or, you can clear and re-draw objects that were updated
@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
         -1,
         SDL_RENDERER_ACCELERATED);
     configuration_t configuration = {
-        8,
+        32,
         1,
         Eigen::Vector2f({0, -9.81}),
         Eigen::Vector2f({0, 0})};

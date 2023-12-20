@@ -1,6 +1,6 @@
 #include "Eigen/Eigen"
 
-#define DELTA_T 0.16
+#define DELTA_T 0.032
 
 typedef struct
 {

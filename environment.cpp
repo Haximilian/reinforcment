@@ -24,24 +24,32 @@ void print_state(state_t *state)
     std::cout << state->position << std::endl;
     std::cout << "state->velocity: " << std::endl;
     std::cout << state->velocity << std::endl;
+    std::cout << "dot: " << std::endl;
+    std::cout << state->velocity.dot(state->position) << std::endl;
 }
 
 void update_state(configuration_t *configuration, state_t *state)
 {
-    // Eigen::Vector2f applied_force = (-1) * configuration->gravity;
-    // float numerator = applied_force.dot(state->position) + state->velocity.dot(state->velocity);
-    // float denominator = state->position.dot(state->position);
-    // float lambda = numerator / denominator;
-    // Eigen::Vector2f constraint_force = lambda * state->position;
-    // Eigen::Vector2f acceleration = constraint_force + applied_force;
+    // a(t) -> object a position
+    // C -> constraint
+    // C(a, 0) = a(t) * a(t) - d**2
+    // C(a, 0) = 0
+    // dC / dt = 0
+    // dC / dt = 2 * a'(t) * a(t)
+    // therefore, velocity ⊥ position
 
-    // // todo: use prior velocity
-    // state->velocity = DELTA_T * acceleration;
-    // state->position = state->position + DELTA_T * state->velocity;
+    float numerator = (-1) * configuration->gravity.dot(state->position) - configuration->weight * state->velocity.dot(state->velocity);
+    float denominator = state->position.dot(state->position);
+    float lambda = numerator / denominator;
+    Eigen::Vector2f constraint_force = lambda * state->position;
+    Eigen::Vector2f acceleration = configuration->gravity + constraint_force;
 
-    static float time = 0;
-    time += DELTA_T;
-    state->position = Eigen::Vector2f(configuration->radius * sin(time), configuration->radius * cos(time));    
+    state->velocity = state->velocity + DELTA_T * acceleration;
+    state->position = state->position + DELTA_T * state->velocity;
+
+    // static float time = 0;
+    // time += DELTA_T;
+    // state->position = Eigen::Vector2f(configuration->radius * sin(time), configuration->radius * cos(time));
 }
 
 Eigen::Vector2f translate(int width, int height, float magnification, Eigen::Vector2f &in)
