@@ -7,8 +7,8 @@
 #include <emscripten.h>
 #endif
 
-#define WINDOW_WIDTH 640
-#define WINDOW_HEIGHT 480
+#define WINDOW_WIDTH    640
+#define WINDOW_HEIGHT   480
 
 typedef struct
 {
@@ -62,7 +62,7 @@ void mainloop(void *mainloop_arguments)
         }
     }
     update_state(arguments->configuration, arguments->state);
-    Eigen::Vector2f position = translate(WINDOW_WIDTH, WINDOW_HEIGHT, 4, arguments->state->position);
+    Eigen::Vector2d position = translate(WINDOW_WIDTH, WINDOW_HEIGHT, 4, arguments->state->position);
     arguments->object->x = position(0);
     arguments->object->y = position(1);
 
@@ -78,6 +78,11 @@ void mainloop(void *mainloop_arguments)
 
     SDL_SetRenderDrawColor(arguments->renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
     SDL_RenderFillRect(arguments->renderer, arguments->object);
+    SDL_RenderDrawLine(arguments->renderer,
+                       WINDOW_WIDTH / 2,
+                       WINDOW_HEIGHT / 2,
+                       arguments->object->x + arguments->object->w / 2,
+                       arguments->object->y + arguments->object->h / 2);
     SDL_RenderPresent(arguments->renderer);
 }
 
@@ -100,8 +105,8 @@ int main(int argc, char *argv[])
     configuration_t configuration = {
         32,
         1,
-        Eigen::Vector2f({0, -9.81}),
-        Eigen::Vector2f({0, 0})};
+        Eigen::Vector2d({0, -9.81}),
+        Eigen::Vector2d({0, 0})};
     arguments.configuration = &configuration;
     arguments.state = initial_state(configuration);
 
